@@ -18,7 +18,6 @@ const validateEditData = (req) =>{
 
     if(!isEditAllowed)
     throw new Error('Not allowed to Edit')
-
 }
 
 module.exports = {

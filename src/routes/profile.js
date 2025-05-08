@@ -8,8 +8,7 @@ const {validateEditData} = require('../utils/validation')
 router.get('/view', userAuth, async(req,res) =>{
     try {
         const user = req.user;
-        res.status(200).send(user);
-        
+        res.status(200).send(user);      
     } catch (error) {
         res.status(400).send('Error : ' + error.message)
     }
