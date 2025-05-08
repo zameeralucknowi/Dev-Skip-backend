@@ -12,6 +12,16 @@ const validateSignupData = (req) =>{
 
 }
 
+const validateEditData = (req) =>{
+    const editablePool = ["firstName","lastName","age","gender","about","skills","photoUrl"];
+    const isEditAllowed = Object.keys(req.body).every(key => editablePool.includes(key));
+
+    if(!isEditAllowed)
+    throw new Error('Not allowed to Edit')
+
+}
+
 module.exports = {
-    validateSignupData
+    validateSignupData,
+    validateEditData
 }
