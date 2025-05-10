@@ -14,7 +14,7 @@ app.use(cookieParser());
 
 app.use('/',authRoute);
 app.use('/profile',profileRoute);
-app.use('/',requestRoute)
+app.use('/request',requestRoute)
 
 
 connectDB()

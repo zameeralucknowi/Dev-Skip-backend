@@ -1,13 +1,52 @@
 const express = require('express')
 const router = express.Router();
-const {userAuth} = require('../middlewares/auth')
+const {userAuth} = require('../middlewares/auth');
+const ConnectionRequest = require('../models/connectionRequest');
+const User = require('../models/user');
 
 
+router.post('/send/:status/:toUserId', userAuth, async (req,res)=>{
+    try {
+        const fromUser = req.user;
+        const fromUserId = fromUser._id;
+        const {status} = req.params;
+        //adding validation for status
+        const statusMap = new Map([
+            ['noped',true],
+            ['doped',true]
+        ])
+        if(!statusMap.has(status)){
+            return res.status(400).json({message:`${status} status type is not valid`});
+        }
+        //validate for sending request for urself
+        const {toUserId} = req.params;
+        if(fromUserId.toString()===toUserId)
+        return res.status(400).json({message:'Cannot send request to yourself'})
 
-
-router.post('/sendConnectionRequest', userAuth, async (req,res)=>{
-    const loggedInUser = req.user;
-    res.send('request sent by :'+ loggedInUser.firstName )
+        const toUser = await User.findById(toUserId);
+        if(!toUser)
+        return res.status(404).json({message:`User does'nt exists`})
+        // validate for already connection request exists and other user validation for request
+        const isAlreadyConnected = await ConnectionRequest.findOne(
+            {
+                $or : [
+                    {fromUserId,toUserId},
+                    {fromUserId :toUserId,toUserId:fromUserId}
+                ]
+            }
+        )
+        if(isAlreadyConnected)
+        return res.status(403).json({message :'Connection already exists'});
+        const newConnectionRequest = new ConnectionRequest({fromUserId, toUserId, status});
+        // while saving to db makes a call to pre schema validation - save event listener
+        const data = await newConnectionRequest.save();
+        res.status(201).json({
+            message : `${fromUser.firstName} sent connection request to ${toUser.firstName} successfully`,
+            data : data
+        }) 
+    } catch (error) {
+        res.status(400).send('Error : ' + error.message)
+    }
 })
 
 
