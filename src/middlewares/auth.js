@@ -1,3 +1,4 @@
+require('dotenv').config()
 const jwt = require('jsonwebtoken');
 const User = require('../models/user')
 
@@ -8,7 +9,7 @@ const userAuth = async (req,res,next) => {
         if (!token)
         throw new Error('Token not provided!!!');
 
-        const decodedToken = await jwt.verify(token, 'JWT');
+        const decodedToken = await jwt.verify(token,process.env.JWT_SECRET);
         const { _id } = decodedToken;
         const user = await User.findById(_id);
 

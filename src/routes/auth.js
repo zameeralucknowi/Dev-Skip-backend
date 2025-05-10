@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express')
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {validateSignupData} = require('../utils/validation');
+
 
 
 router.post('/signup', async (req, res) => {
@@ -37,7 +39,7 @@ router.post('/login', async(req,res)=>{
         const isValidPassword = await bcrypt.compare(password,user.password);
         if(!isValidPassword)
         throw new Error('Invalid credentials');
-        const token = jwt.sign({_id:user._id},'JWT',{expiresIn:'3d'});
+        const token = jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'3d'});
         res.cookie('token',token,{expires:new Date(Date.now() + 24 * 3600000)});
         res.status(200).send('login successfull')
     } catch (error) {
