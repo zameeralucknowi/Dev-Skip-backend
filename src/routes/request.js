@@ -12,8 +12,8 @@ router.post('/send/:status/:toUserId', userAuth, async (req,res)=>{
         const {status} = req.params;
         //adding validation for status
         const statusMap = new Map([
-            ['noped',true],
-            ['doped',true]
+            ['nope',true],
+            ['dope',true]
         ])
         if(!statusMap.has(status)){
             return res.status(400).json({message:`${status} status type is not valid`});
@@ -44,6 +44,33 @@ router.post('/send/:status/:toUserId', userAuth, async (req,res)=>{
             message : `${fromUser.firstName} sent connection request to ${toUser.firstName} successfully`,
             data : data
         }) 
+    } catch (error) {
+        res.status(400).send('Error : ' + error.message)
+    }
+})
+
+router.post('/review/:status/:requestId', userAuth,async(req,res) =>{
+    try {
+        // validate the dynamic status
+        const loggedInUser = req.user;
+        const {status,requestId} = req.params;
+        const statusMap = new Map([
+            ['accepted',true],
+            ['rejected',true]
+        ])
+        if(!statusMap.has(status))
+        return res.status(400).json({message:`${status} status type is not valid`});
+
+        const connectionRequest = await ConnectionRequest.findOne({
+            _id : requestId,
+            toUserId : loggedInUser._id,
+            status : 'dope'
+        })
+        if(!connectionRequest)
+        return res.status(404).json({message:`Connection request does'nt exists`});
+        connectionRequest.status = status;
+        const data = await connectionRequest.save();
+        return res.status(200).json({message:`Connection request ${status}`,data:data});
     } catch (error) {
         res.status(400).send('Error : ' + error.message)
     }

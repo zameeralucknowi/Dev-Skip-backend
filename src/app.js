@@ -5,6 +5,8 @@ const User = require('./models/user')
 const authRoute = require('./routes/auth');
 const profileRoute = require('./routes/profile');
 const requestRoute = require('./routes/request');
+const userRoute = require('./routes/user')
+
 const app = express();
 
 app.use(express.json());
@@ -14,7 +16,9 @@ app.use(cookieParser());
 
 app.use('/',authRoute);
 app.use('/profile',profileRoute);
-app.use('/request',requestRoute)
+app.use('/request',requestRoute);
+app.use('/user',userRoute)
+
 
 
 connectDB()
