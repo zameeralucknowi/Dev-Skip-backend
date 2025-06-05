@@ -13,7 +13,7 @@ const cors = require('cors')
 const app = express();
 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:'https://devskip.onrender.com',
     credentials : true
 }))
 app.use(express.json());
