@@ -22,8 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serve Vite build files (add this!)
-const __dirnameResolved = path.resolve();
-app.use(express.static(path.join(__dirnameResolved, 'dist')));
+// const __dirnameResolved = path.resolve();
+// app.use(express.static(path.join(__dirnameResolved, 'dist')));
 
 // API Routes
 app.use('/auth', authRoute);
@@ -32,9 +32,9 @@ app.use('/request', requestRoute);
 app.use('/user', userRoute);
 
 // Fallback: serve index.html for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirnameResolved, 'dist', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirnameResolved, 'dist', 'index.html'));
+// });
 
 // DB Connection and Server Start
 connectDB()
