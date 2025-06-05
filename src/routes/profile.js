@@ -24,7 +24,7 @@ router.patch('/edit', userAuth ,async (req,res) =>{
         message:`${loggedInUser.firstName} Your profile was updated`,
         data:loggedInUser})
     } catch (error) {
-        res.status(400).send('Error : ' + error.message)
+        res.status(400).send(error.message)
     }
 })
 
