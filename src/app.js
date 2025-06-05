@@ -6,6 +6,7 @@ const authRoute = require('./routes/auth');
 const profileRoute = require('./routes/profile');
 const requestRoute = require('./routes/request');
 const userRoute = require('./routes/user')
+const path = require('path')
 const cors = require('cors')
 
 
@@ -25,6 +26,10 @@ app.use('/',authRoute);
 app.use('/profile',profileRoute);
 app.use('/request',requestRoute);
 app.use('/user',userRoute)
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 
 
