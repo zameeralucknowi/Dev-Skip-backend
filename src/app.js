@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 
 
-app.use('/',authRoute);
+app.use('/auth',authRoute);
 app.use('/profile',profileRoute);
 app.use('/request',requestRoute);
 app.use('/user',userRoute)
