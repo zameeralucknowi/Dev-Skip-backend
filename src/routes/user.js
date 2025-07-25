@@ -3,6 +3,8 @@ const router = express.Router();
 const { userAuth } = require('../middlewares/auth');
 const ConnectionRequest = require('../models/connectionRequest');
 const User = require('../models/user');
+const Message = require('../models/message')
+const Conversation = require('../models/conversation')
 const USER_SAFE_DATA = ["firstName","lastName","photoUrl","about","age","gender","skills"];
 
 router.get('/request/recieved',userAuth, async(req,res)=>{
@@ -76,6 +78,26 @@ router.get('/feed', userAuth, async (req,res)=>{
     } catch (error) {
         res.status(400).send('Error : ' + error.message)
     }
+})
+
+router.get('/messages/:senderId/:recieverId',async (req,res)=>{
+    try {
+        const {senderId,recieverId} = req.params;
+
+        let conversation = await Conversation.findOne({
+            participants: {$all:[senderId,recieverId]}
+        }).populate('messages')
+
+        if(!conversation){
+          return res.status(200).json({data:[],message:'no messages yet'});
+        }
+
+        const allMessages = conversation?.messages;
+        res.status(200).json({data:allMessages, message:'all messages'});     
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 
 
